@@ -2,7 +2,9 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>Game Kuis Rumah Sakit - Mode Tantangan</title>
+  <!-- Mencegah layar HP zoom saat tombol sentuh ditekan cepat -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Game Kuis Rumah Sakit</title>
   <style>
     body { 
       font-family: 'Segoe UI', sans-serif; 
@@ -11,26 +13,27 @@
       color: #0f172a; 
       min-height: 100vh;
       margin: 0;
-      padding: 20px;
+      padding: 15px;
       transition: background 0.3s;
+      touch-action: manipulation; /* Responsif untuk sentuhan HP */
     }
 
-    /* Efek layar berkedip saat sirene darurat aktif */
     body.darurat {
       background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
     }
 
     h2 {
       color: #0284c7;
-      margin-bottom: 5px;
+      margin: 5px 0;
+      font-size: 20px;
     }
 
     #statusGangguan {
       font-weight: bold;
-      height: 24px;
+      height: 22px;
       color: #dc2626;
       margin-bottom: 8px;
-      font-size: 14px;
+      font-size: 13px;
     }
 
     canvas { 
@@ -39,11 +42,10 @@
       border-radius: 16px; 
       box-shadow: 0 10px 25px rgba(2, 132, 199, 0.25); 
       display: block; 
-      margin: 0 auto 15px auto; 
-      transition: transform 0.1s;
+      margin: 0 auto 12px auto; 
+      max-width: 100%;
     }
 
-    /* Efek layar bergetar */
     canvas.gempa {
       animation: shake 0.2s infinite;
     }
@@ -54,13 +56,40 @@
       100% { transform: translate(1px, -2px); }
     }
 
+    /* Tombol Kontrol Khusus HP (Sentuh Layar) */
+    .mobile-controls {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin: 10px auto 15px auto;
+      max-width: 300px;
+    }
+
+    .btn-arah {
+      flex: 1;
+      padding: 16px 0;
+      font-size: 22px;
+      background: linear-gradient(180deg, #0284c7, #0369a1);
+      color: white;
+      border: none;
+      border-radius: 14px;
+      box-shadow: 0 4px 10px rgba(2, 132, 199, 0.3);
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .btn-arah:active {
+      transform: scale(0.94);
+      background: #075985;
+    }
+
     #quizModal { 
       display: none; 
       background: #ffffff; 
       border: 3px solid #ef4444;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
       padding: 20px; 
-      width: 300px; 
+      width: 280px; 
       margin: 15px auto; 
       border-radius: 12px; 
       color: #1e293b;
@@ -71,9 +100,11 @@
       margin: 5px;
       border-radius: 8px;
       border: 1px solid #94a3b8;
+      width: 85%;
+      max-width: 260px;
     }
 
-    button { 
+    button.aksi { 
       padding: 10px 16px; 
       margin: 5px; 
       cursor: pointer; 
@@ -88,10 +119,15 @@
 <body>
 
   <h2>🏥 Kuis Medis: Hindari Panah!</h2>
-  <!-- Teks peringatan gangguan -->
   <div id="statusGangguan">Status: Normal (Skor: 0)</div>
 
-  <canvas id="gameCanvas" width="300" height="400"></canvas>
+  <canvas id="gameCanvas" width="300" height="380"></canvas>
+
+  <!-- Tombol Sentuh Kiri & Kanan untuk HP -->
+  <div class="mobile-controls">
+    <button class="btn-arah" id="btnKiri">⬅️ KIRI</button>
+    <button class="btn-arah" id="btnKanan">KANAN ➡️</button>
+  </div>
 
   <!-- Pop-up Pertanyaan -->
   <div id="quizModal">
@@ -105,7 +141,8 @@
     <input type="text" id="inputSoal" placeholder="Tulis pertanyaan...">
     <input type="text" id="inputJawabBenar" placeholder="Jawaban Benar">
     <input type="text" id="inputJawabSalah" placeholder="Jawaban Salah">
-    <button onclick="tambahSoal()">Simpan Soal</button>
+    <br>
+    <button class="aksi" onclick="tambahSoal()">Simpan Soal</button>
   </div>
 
   <script>
@@ -133,8 +170,8 @@
       }
     }
 
-    // 2. Variabel Pemain, Banyak Musuh, & Gangguan
-    let player = { x: 135, y: 350, size: 30 };
+    // 2. Variabel Pemain, Musuh, & Gangguan
+    let player = { x: 135, y: 330, size: 30 };
     let enemies = [
       { x: Math.random() * 270, y: 0, size: 28, speed: 3 },
       { x: Math.random() * 270, y: -150, size: 28, speed: 3.5 },
@@ -145,30 +182,63 @@
     let skor = 0;
     let frameCount = 0;
 
-    // Variabel Status Gangguan
-    let kontrolTerbalik = false; // Kiri jadi kanan, kanan jadi kiri
-    let modeKabut = false;       // Layar berkabut/gelap sebagian
-    let modeDarurat = false;     // Sirene bergetar
+    let kontrolTerbalik = false;
+    let modeKabut = false;
+    let modeDarurat = false;
 
-    // Kontrol Keyboard
-    document.addEventListener("keydown", (e) => {
+    // Fungsi Gerak Pemain (Bisa dipanggil dari Keyboard maupun Tombol HP)
+    function gerakKiri() {
       if (isGameOver) return;
-      let arahKiri = kontrolTerbalik ? "ArrowRight" : "ArrowLeft";
-      let arahKanan = kontrolTerbalik ? "ArrowLeft" : "ArrowRight";
+      if (!kontrolTerbalik) {
+        if (player.x > 0) player.x -= 24;
+      } else {
+        if (player.x < 270) player.x += 24;
+      }
+    }
 
-      if (e.key === arahKiri && player.x > 0) player.x -= 22;
-      if (e.key === arahKanan && player.x < 270) player.x += 22;
+    function gerakKanan() {
+      if (isGameOver) return;
+      if (!kontrolTerbalik) {
+        if (player.x < 270) player.x += 24;
+      } else {
+        if (player.x > 0) player.x -= 24;
+      }
+    }
+
+    // Kontrol Keyboard Laptop
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowLeft") gerakKiri();
+      if (e.key === "ArrowRight") gerakKanan();
     });
 
-    // Fungsi Mengatur Gangguan Acak Setiap Beberapa Detik
+    // Kontrol Tombol Layar Sentuh HP (Touch & Click)
+    const btnKiri = document.getElementById("btnKiri");
+    const btnKanan = document.getElementById("btnKanan");
+
+    btnKiri.addEventListener("touchstart", (e) => { e.preventDefault(); gerakKiri(); });
+    btnKiri.addEventListener("click", gerakKiri);
+
+    btnKanan.addEventListener("touchstart", (e) => { e.preventDefault(); gerakKanan(); });
+    btnKanan.addEventListener("click", gerakKanan);
+
+    // Kontrol Sentuh Langsung di Layar Game (Tap sisi kiri/kanan canvas)
+    canvas.addEventListener("touchstart", (e) => {
+      e.preventDefault();
+      const rect = canvas.getBoundingClientRect();
+      const touchX = e.touches[0].clientX - rect.left;
+      if (touchX < rect.width / 2) {
+        gerakKiri();
+      } else {
+        gerakKanan();
+      }
+    });
+
+    // 3. Pengatur Gangguan
     function kelolaGangguan() {
       frameCount++;
 
-      // Setiap 400 frame (~6-7 detik), acak jenis gangguan baru
       if (frameCount % 400 === 0) {
         const acak = Math.floor(Math.random() * 4);
-        
-        // Reset semua gangguan dulu
         kontrolTerbalik = false;
         modeKabut = false;
         modeDarurat = false;
@@ -176,42 +246,41 @@
         canvas.classList.remove("gempa");
 
         if (acak === 1) {
-          kontrolTerbalik = true; // Gangguan 1: Efek pusing obat
+          kontrolTerbalik = true;
         } else if (acak === 2) {
-          modeKabut = true;       // Gangguan 2: Efek kabut bius
+          modeKabut = true;
         } else if (acak === 3) {
-          modeDarurat = true;     // Gangguan 3: Sirene IGD bergetar
+          modeDarurat = true;
           document.body.classList.add("darurat");
           canvas.classList.add("gempa");
         }
       }
 
-      // Perbarui teks peringatan di atas layar
       if (kontrolTerbalik) {
         statusText.innerText = `😵 EFEK OBAT: Kontrol Terbalik! (Skor: ${skor})`;
       } else if (modeKabut) {
         statusText.innerText = `🌫️ EFEK BIUS: Pandangan Kabur! (Skor: ${skor})`;
       } else if (modeDarurat) {
-        statusText.innerText = `🚨 SIRENE DARURAT: Layar Bergetar! (Skor: ${skor})`;
+        statusText.innerText = `🚨 SIRENE DARURAT: Bergetar! (Skor: ${skor})`;
       } else {
         statusText.innerText = `✅ Status: Normal (Skor: ${skor})`;
       }
     }
 
-    // 3. Logika Utama Game
+    // 4. Loop Utama Game
     function updateGame() {
       if (isGameOver) return;
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       kelolaGangguan();
 
-      // --- DEKORASI RUMAH SAKIT ---
+      // Dekorasi Palang Medis Rumah Sakit
       ctx.fillStyle = "rgba(239, 68, 68, 0.12)";
-      ctx.fillRect(135, 150, 30, 90);
-      ctx.fillRect(105, 180, 90, 30);
+      ctx.fillRect(135, 140, 30, 90);
+      ctx.fillRect(105, 170, 90, 30);
 
       // Gambar Pemain Bentuk LOVE
-      ctx.fillStyle = kontrolTerbalik ? "#9333ea" : "#b46a72"; // Berubah ungu jika pusing
+      ctx.fillStyle = kontrolTerbalik ? "#9333ea" : "#b46a72";
       const x = player.x, y = player.y, s = player.size;
       ctx.beginPath();
       ctx.moveTo(x + s / 2, y + s * 0.3);
@@ -221,16 +290,15 @@
       ctx.bezierCurveTo(x + s, y, x + s / 2, y, x + s / 2, y + s * 0.3);
       ctx.fill();
 
-      // Gerakkan & Gambar Semua Musuh (3 Panah)
+      // Gambar Musuh Panah
       for (let i = 0; i < enemies.length; i++) {
         let enemy = enemies[i];
         enemy.y += enemy.speed;
 
-        if (enemy.y > 400) {
+        if (enemy.y > 380) {
           enemy.y = -40;
           enemy.x = Math.random() * 270;
-          skor += 10; // Tambah skor tiap berhasil menghindari panah
-          // Semakin tinggi skor, panah makin cepat
+          skor += 10;
           if (enemy.speed < 7) enemy.speed += 0.15;
         }
 
@@ -261,27 +329,27 @@
         }
       }
 
-      // --- EFEK GANGGUAN KABUT BIUS (Menutupi bagian tengah layar) ---
+      // Efek Kabut Bius
       if (modeKabut) {
         ctx.fillStyle = "rgba(148, 163, 184, 0.78)";
-        ctx.fillRect(0, 80, 300, 190);
+        ctx.fillRect(0, 75, 300, 185);
         ctx.fillStyle = "#1e293b";
         ctx.font = "bold 16px sans-serif";
-        ctx.fillText("🌫️ KABUT OBAT BIUS 🌫️", 55, 180);
+        ctx.fillText("🌫️ KABUT OBAT BIUS 🌫️", 55, 175);
       }
 
       requestAnimationFrame(updateGame);
     }
 
-    // 4. Fungsi Munculkan Kuis Saat Kalah
+    // 5. Kuis Saat Kalah
     function tampilkanPertanyaan() {
       const soalAcak = bankSoal[Math.floor(Math.random() * bankSoal.length)];
       document.getElementById("questionText").innerText = soalAcak.tanya;
       
       const optionsBox = document.getElementById("optionsBox");
       optionsBox.innerHTML = `
-        <button onclick="cekJawaban(true)">${soalAcak.benar}</button>
-        <button onclick="cekJawaban(false)">${soalAcak.salah}</button>
+        <button class="aksi" onclick="cekJawaban(true)">${soalAcak.benar}</button>
+        <button class="aksi" onclick="cekJawaban(false)">${soalAcak.salah}</button>
       `;
       document.getElementById("quizModal").style.display = "block";
     }
@@ -290,7 +358,6 @@
       document.getElementById("quizModal").style.display = "none";
       if (isBenar) {
         alert("Benar! Pasien selamat, lanjutkan permainan!");
-        // Reset posisi semua panah ke atas agar tidak langsung tertabrak lagi
         enemies.forEach((e, idx) => e.y = -50 * (idx + 1));
         isGameOver = false;
         updateGame();
