@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Game Kuis Rumah Sakit</title>
+  <title>Kuis Medis 2 Player + Ranking</title>
   <style>
     body { 
       font-family: 'Segoe UI', sans-serif; 
@@ -12,7 +12,7 @@
       color: #0f172a; 
       min-height: 100vh;
       margin: 0;
-      padding: 15px;
+      padding: 10px;
       transition: background 0.3s;
       touch-action: manipulation;
     }
@@ -23,25 +23,86 @@
 
     h2 {
       color: #0284c7;
-      margin: 5px 0;
-      font-size: 20px;
+      margin: 4px 0;
+      font-size: 18px;
     }
 
     #statusGangguan {
       font-weight: bold;
-      height: 22px;
+      height: 20px;
       color: #dc2626;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
       font-size: 13px;
+    }
+
+    /* Kotak Input Nama Sebelum Main */
+    #setupModal {
+      background: #ffffff;
+      border: 3px solid #0284c7;
+      border-radius: 14px;
+      padding: 16px;
+      width: 270px;
+      margin: 10px auto;
+      box-shadow: 0 8px 20px rgba(2, 132, 199, 0.2);
+    }
+
+    #setupModal input {
+      width: 88%;
+      padding: 8px 10px;
+      margin: 6px 0;
+      border: 1.5px solid #94a3b8;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    /* Area Kontrol Pemain 2 (Atas - Biru) & Pemain 1 (Bawah - Merah) */
+    .controls-box {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin: 6px auto;
+      max-width: 300px;
+    }
+
+    .btn-p2 {
+      flex: 1;
+      padding: 12px 0;
+      font-size: 15px;
+      font-weight: bold;
+      background: linear-gradient(180deg, #0284c7, #0369a1);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      box-shadow: 0 3px 8px rgba(2, 132, 199, 0.3);
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .btn-p1 {
+      flex: 1;
+      padding: 12px 0;
+      font-size: 15px;
+      font-weight: bold;
+      background: linear-gradient(180deg, #e11d48, #be123c);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      box-shadow: 0 3px 8px rgba(225, 29, 72, 0.3);
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .btn-p1:active, .btn-p2:active {
+      transform: scale(0.94);
     }
 
     canvas { 
       background: linear-gradient(180deg, #ffffff 0%, #f1f5f9 100%); 
       border: 4px solid #0284c7; 
       border-radius: 16px; 
-      box-shadow: 0 10px 25px rgba(2, 132, 199, 0.25); 
+      box-shadow: 0 8px 20px rgba(2, 132, 199, 0.25); 
       display: block; 
-      margin: 0 auto 12px auto; 
+      margin: 6px auto; 
       max-width: 100%;
     }
 
@@ -55,42 +116,26 @@
       100% { transform: translate(1px, -2px); }
     }
 
-    .mobile-controls {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      margin: 10px auto 15px auto;
-      max-width: 300px;
-    }
-
-    .btn-arah {
-      flex: 1;
-      padding: 16px 0;
-      font-size: 22px;
-      background: linear-gradient(180deg, #0284c7, #0369a1);
-      color: white;
-      border: none;
-      border-radius: 14px;
-      box-shadow: 0 4px 10px rgba(2, 132, 199, 0.3);
-      user-select: none;
-      -webkit-user-select: none;
-    }
-
-    .btn-arah:active {
-      transform: scale(0.94);
-      background: #075985;
-    }
-
     #quizModal { 
       display: none; 
       background: #ffffff; 
       border: 3px solid #ef4444;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-      padding: 20px; 
-      width: 280px; 
-      margin: 15px auto; 
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      padding: 18px; 
+      width: 270px; 
+      margin: 10px auto; 
       border-radius: 12px; 
       color: #1e293b;
+    }
+
+    #targetPlayerBadge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 20px;
+      color: white;
+      font-size: 12px;
+      font-weight: bold;
+      margin-bottom: 6px;
     }
 
     button.aksi { 
@@ -103,25 +148,107 @@
       border-radius: 8px;
       font-weight: bold;
     }
+
+    /* Papan Peringkat (Leaderboard) */
+    #leaderboardBox {
+      background: #ffffff;
+      border: 2px solid #cbd5e1;
+      border-radius: 14px;
+      padding: 12px;
+      width: 280px;
+      margin: 14px auto;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    }
+
+    #leaderboardBox h4 {
+      margin: 0 0 8px 0;
+      color: #0f172a;
+      font-size: 15px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    th, td {
+      padding: 6px 4px;
+      border-bottom: 1px solid #e2e8f0;
+      text-align: center;
+    }
+
+    th {
+      background: #f1f5f9;
+      color: #0284c7;
+    }
+
+    .btn-reset-rank {
+      margin-top: 8px;
+      background: transparent;
+      border: 1px solid #94a3b8;
+      color: #64748b;
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
 
-  <h2>🏥 Kuis Medis: Hindari Panah!</h2>
-  <div id="statusGangguan">Status: Normal (Skor: 0)</div>
+  <h2>🏥 Kuis Medis: Duel 2 Pemain!</h2>
+  <div id="statusGangguan">Masukkan nama pemain untuk mulai</div>
 
-  <canvas id="gameCanvas" width="300" height="380"></canvas>
+  <!-- Form Nama Pemain Sebelum Mulai -->
+  <div id="setupModal">
+    <h4 style="margin: 0 0 8px 0; color: #0284c7;">Siapa yang Bertanding?</h4>
+    <input type="text" id="inputNamaP1" placeholder="Nama Pemain 1 (Merah ❤️)">
+    <input type="text" id="inputNamaP2" placeholder="Nama Pemain 2 (Biru 💙)">
+    <br>
+    <button class="aksi" onclick="mulaiPermainan()">▶️ Mulai Duel</button>
+  </div>
 
-  <!-- Tombol Sentuh Kiri & Kanan untuk HP -->
-  <div class="mobile-controls">
-    <button class="btn-arah" id="btnKiri">⬅️ KIRI</button>
-    <button class="btn-arah" id="btnKanan">KANAN ➡️</button>
+  <!-- Area Game (Disembunyikan sebelum nama diisi) -->
+  <div id="areaGame" style="display: none;">
+    <!-- Tombol Kontrol Pemain 2 (Biru - Atas) -->
+    <div class="controls-box">
+      <button class="btn-p2" id="p2Kiri">⬅️ <span id="labelP2Kiri">P2</span></button>
+      <button class="btn-p2" id="p2Kanan"><span id="labelP2Kanan">P2</span> ➡️</button>
+    </div>
+
+    <canvas id="gameCanvas" width="300" height="340"></canvas>
+
+    <!-- Tombol Kontrol Pemain 1 (Merah - Bawah) -->
+    <div class="controls-box">
+      <button class="btn-p1" id="p1Kiri">⬅️ <span id="labelP1Kiri">P1</span></button>
+      <button class="btn-p1" id="p1Kanan"><span id="labelP1Kanan">P1</span> ➡️</button>
+    </div>
   </div>
 
   <!-- Pop-up Pertanyaan -->
   <div id="quizModal">
-    <h3 id="questionText">Pertanyaan di sini</h3>
+    <div id="targetPlayerBadge">Giliran Pemain</div>
+    <h3 id="questionText" style="margin: 8px 0; font-size: 16px;">Pertanyaan di sini</h3>
     <div id="optionsBox"></div>
+  </div>
+
+  <!-- Papan Peringkat Top 5 -->
+  <div id="leaderboardBox">
+    <h4>🏆 Papan Peringkat (Top 5)</h4>
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Pemenang</th>
+          <th>Skor</th>
+        </tr>
+      </thead>
+      <tbody id="rankingBody">
+        <tr><td colspan="3">Belum ada data skor</td></tr>
+      </tbody>
+    </table>
+    <button class="btn-reset-rank" onclick="resetPeringkat()">Reset Peringkat</button>
   </div>
 
   <script>
@@ -129,21 +256,26 @@
     const ctx = canvas.getContext("2d");
     const statusText = document.getElementById("statusGangguan");
 
-    // 1. Bank Soal (Bisa ditambah langsung di dalam kode ini)
+    // 1. Bank Soal
     const bankSoal = [
       { tanya: "Ibu kota Indonesia adalah?", benar: "Jakarta", salah: "Bandung" },
-      { tanya: "Organ tubuh yang memompa darah adalah?", benar: "Jantung", salah: "Paru-paru" }
+      { tanya: "Organ tubuh yang memompa darah adalah?", benar: "Jantung", salah: "Paru-paru" },
+      { tanya: "Suhu tubuh normal manusia sekitar?", benar: "36,5°C - 37,5°C", salah: "40°C - 42°C" },
+      { tanya: "Sel darah yang berfungsi mengangkut oksigen adalah?", benar: "Sel darah merah", salah: "Keping darah" }
     ];
 
-    // 2. Variabel Pemain, Musuh, & Gangguan
-    let player = { x: 135, y: 330, size: 30 };
+    // 2. Variabel 2 Pemain & Musuh
+    let player1 = { x: 185, y: 295, size: 28, nama: "Pemain 1" };
+    let player2 = { x: 85,  y: 295, size: 28, nama: "Pemain 2" };
+    let pemainTertabrak = null;
+
     let enemies = [
-      { x: Math.random() * 270, y: 0, size: 28, speed: 3 },
-      { x: Math.random() * 270, y: -150, size: 28, speed: 3.5 },
-      { x: Math.random() * 270, y: -300, size: 28, speed: 4 }
+      { x: Math.random() * 270, y: 0, size: 26, speed: 2.8 },
+      { x: Math.random() * 270, y: -140, size: 26, speed: 3.2 },
+      { x: Math.random() * 270, y: -280, size: 26, speed: 3.6 }
     ];
 
-    let isGameOver = false;
+    let isGameOver = true;
     let skor = 0;
     let frameCount = 0;
 
@@ -151,57 +283,101 @@
     let modeKabut = false;
     let modeDarurat = false;
 
-    function gerakKiri() {
-      if (isGameOver) return;
-      if (!kontrolTerbalik) {
-        if (player.x > 0) player.x -= 24;
-      } else {
-        if (player.x < 270) player.x += 24;
+    // 3. Sistem Papan Peringkat (Leaderboard)
+    function muatPeringkat() {
+      const dataRank = JSON.parse(localStorage.getItem("rankingKuisMedis")) || [];
+      const tbody = document.getElementById("rankingBody");
+
+      if (dataRank.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="3" style="color:#64748b;">Belum ada pemenang tercatat</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = dataRank.map((item, index) => {
+        const medali = index === 0 ? "🥇" : index === 1 ? "🥈" : index === 2 ? "🥉" : `${index + 1}.`;
+        return `
+          <tr>
+            <td><strong>${medali}</strong></td>
+            <td>${item.nama}</td>
+            <td><strong>${item.skor}</strong></td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    function simpanSkorPemenang(namaPemenang, skorAkhir) {
+      let dataRank = JSON.parse(localStorage.getItem("rankingKuisMedis")) || [];
+      dataRank.push({ nama: namaPemenang, skor: skorAkhir });
+      // Urutkan dari skor terbesar ke terkecil, ambil 5 teratas
+      dataRank.sort((a, b) => b.skor - a.skor);
+      dataRank = dataRank.slice(0, 5);
+      localStorage.setItem("rankingKuisMedis", JSON.stringify(dataRank));
+      muatPeringkat();
+    }
+
+    function resetPeringkat() {
+      if (confirm("Hapus semua daftar peringkat?")) {
+        localStorage.removeItem("rankingKuisMedis");
+        muatPeringkat();
       }
     }
 
-    function gerakKanan() {
-      if (isGameOver) return;
-      if (!kontrolTerbalik) {
-        if (player.x < 270) player.x += 24;
-      } else {
-        if (player.x > 0) player.x -= 24;
-      }
+    // 4. Mulai Permainan Setelah Nama Diisi
+    function mulaiPermainan() {
+      const nama1 = document.getElementById("inputNamaP1").value.trim() || "Pemain 1";
+      const nama2 = document.getElementById("inputNamaP2").value.trim() || "Pemain 2";
+
+      player1.nama = nama1;
+      player2.nama = nama2;
+
+      document.getElementById("labelP1Kiri").innerText = nama1.slice(0, 8);
+      document.getElementById("labelP1Kanan").innerText = nama1.slice(0, 8);
+      document.getElementById("labelP2Kiri").innerText = nama2.slice(0, 8);
+      document.getElementById("labelP2Kanan").innerText = nama2.slice(0, 8);
+
+      document.getElementById("setupModal").style.display = "none";
+      document.getElementById("areaGame").style.display = "block";
+
+      isGameOver = false;
+      updateGame();
     }
 
-    // Kontrol Keyboard Laptop
+    // Fungsi Gerak Pemain
+    function gerakP1(arah) {
+      if (isGameOver) return;
+      const langkah = (arah === "kiri" ? -24 : 24) * (kontrolTerbalik ? -1 : 1);
+      player1.x = Math.max(0, Math.min(272, player1.x + langkah));
+    }
+
+    function gerakP2(arah) {
+      if (isGameOver) return;
+      const langkah = (arah === "kiri" ? -24 : 24) * (kontrolTerbalik ? -1 : 1);
+      player2.x = Math.max(0, Math.min(272, player2.x + langkah));
+    }
+
     document.addEventListener("keydown", (e) => {
-      if (e.key === "ArrowLeft") gerakKiri();
-      if (e.key === "ArrowRight") gerakKanan();
+      if (e.key === "ArrowLeft") gerakP1("kiri");
+      if (e.key === "ArrowRight") gerakP1("kanan");
+      if (e.key === "a" || e.key === "A") gerakP2("kiri");
+      if (e.key === "d" || e.key === "D") gerakP2("kanan");
     });
 
-    // Kontrol Tombol Layar Sentuh HP
-    const btnKiri = document.getElementById("btnKiri");
-    const btnKanan = document.getElementById("btnKanan");
+    function pasangTombol(id, fungsi) {
+      const el = document.getElementById(id);
+      el.addEventListener("touchstart", (e) => { e.preventDefault(); fungsi(); });
+      el.addEventListener("click", fungsi);
+    }
 
-    btnKiri.addEventListener("touchstart", (e) => { e.preventDefault(); gerakKiri(); });
-    btnKiri.addEventListener("click", gerakKiri);
+    pasangTombol("p1Kiri", () => gerakP1("kiri"));
+    pasangTombol("p1Kanan", () => gerakP1("kanan"));
+    pasangTombol("p2Kiri", () => gerakP2("kiri"));
+    pasangTombol("p2Kanan", () => gerakP2("kanan"));
 
-    btnKanan.addEventListener("touchstart", (e) => { e.preventDefault(); gerakKanan(); });
-    btnKanan.addEventListener("click", gerakKanan);
-
-    // Kontrol Sentuh Langsung di Layar Game
-    canvas.addEventListener("touchstart", (e) => {
-      e.preventDefault();
-      const rect = canvas.getBoundingClientRect();
-      const touchX = e.touches[0].clientX - rect.left;
-      if (touchX < rect.width / 2) {
-        gerakKiri();
-      } else {
-        gerakKanan();
-      }
-    });
-
-    // 3. Pengatur Gangguan
+    // 5. Pengatur Gangguan
     function kelolaGangguan() {
       frameCount++;
 
-      if (frameCount % 400 === 0) {
+      if (frameCount % 420 === 0) {
         const acak = Math.floor(Math.random() * 4);
         kontrolTerbalik = false;
         modeKabut = false;
@@ -209,11 +385,9 @@
         document.body.classList.remove("darurat");
         canvas.classList.remove("gempa");
 
-        if (acak === 1) {
-          kontrolTerbalik = true;
-        } else if (acak === 2) {
-          modeKabut = true;
-        } else if (acak === 3) {
+        if (acak === 1) kontrolTerbalik = true;
+        else if (acak === 2) modeKabut = true;
+        else if (acak === 3) {
           modeDarurat = true;
           document.body.classList.add("darurat");
           canvas.classList.add("gempa");
@@ -231,21 +405,9 @@
       }
     }
 
-    // 4. Loop Utama Game
-    function updateGame() {
-      if (isGameOver) return;
-
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      kelolaGangguan();
-
-      // Dekorasi Palang Medis Rumah Sakit
-      ctx.fillStyle = "rgba(239, 68, 68, 0.12)";
-      ctx.fillRect(135, 140, 30, 90);
-      ctx.fillRect(105, 170, 90, 30);
-
-      // Gambar Pemain Bentuk LOVE
-      ctx.fillStyle = kontrolTerbalik ? "#9333ea" : "#b46a72";
-      const x = player.x, y = player.y, s = player.size;
+    function gambarHati(p, warnaNormal) {
+      ctx.fillStyle = kontrolTerbalik ? "#9333ea" : warnaNormal;
+      const x = p.x, y = p.y, s = p.size;
       ctx.beginPath();
       ctx.moveTo(x + s / 2, y + s * 0.3);
       ctx.bezierCurveTo(x + s / 2, y, x, y, x, y + s * 0.35);
@@ -253,20 +415,44 @@
       ctx.bezierCurveTo(x + s / 2, y + s * 0.85, x + s, y + s * 0.65, x + s, y + s * 0.35);
       ctx.bezierCurveTo(x + s, y, x + s / 2, y, x + s / 2, y + s * 0.3);
       ctx.fill();
+    }
 
-      // Gambar Musuh Panah
+    function kenaPanah(p, enemy) {
+      return (
+        p.x < enemy.x + enemy.size - 4 &&
+        p.x + p.size - 4 > enemy.x &&
+        p.y < enemy.y + enemy.size - 4 &&
+        p.y + p.size - 4 > enemy.y
+      );
+    }
+
+    // 6. Loop Utama Game
+    function updateGame() {
+      if (isGameOver) return;
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      kelolaGangguan();
+
+      // Palang Medis Rumah Sakit
+      ctx.fillStyle = "rgba(239, 68, 68, 0.12)";
+      ctx.fillRect(135, 125, 30, 90);
+      ctx.fillRect(105, 155, 90, 30);
+
+      gambarHati(player1, "#e11d48");
+      gambarHati(player2, "#0284c7");
+
       for (let i = 0; i < enemies.length; i++) {
         let enemy = enemies[i];
         enemy.y += enemy.speed;
 
-        if (enemy.y > 380) {
+        if (enemy.y > 340) {
           enemy.y = -40;
           enemy.x = Math.random() * 270;
           skor += 10;
-          if (enemy.speed < 7) enemy.speed += 0.15;
+          if (enemy.speed < 6.5) enemy.speed += 0.12;
         }
 
-        ctx.fillStyle = modeDarurat ? "#dc2626" : "#0369a1";
+        ctx.fillStyle = modeDarurat ? "#dc2626" : "#334155";
         const ex = enemy.x, ey = enemy.y, es = enemy.size;
         ctx.beginPath();
         ctx.moveTo(ex + es * 0.35, ey);
@@ -279,13 +465,15 @@
         ctx.closePath();
         ctx.fill();
 
-        // Cek Tabrakan
-        if (
-          player.x < enemy.x + enemy.size - 4 &&
-          player.x + player.size - 4 > enemy.x &&
-          player.y < enemy.y + enemy.size - 4 &&
-          player.y + player.size - 4 > enemy.y
-        ) {
+        if (kenaPanah(player1, enemy)) {
+          pemainTertabrak = player1;
+          isGameOver = true;
+          canvas.classList.remove("gempa");
+          tampilkanPertanyaan();
+          return;
+        }
+        if (kenaPanah(player2, enemy)) {
+          pemainTertabrak = player2;
           isGameOver = true;
           canvas.classList.remove("gempa");
           tampilkanPertanyaan();
@@ -293,21 +481,25 @@
         }
       }
 
-      // Efek Kabut Bius
       if (modeKabut) {
         ctx.fillStyle = "rgba(148, 163, 184, 0.78)";
-        ctx.fillRect(0, 75, 300, 185);
+        ctx.fillRect(0, 70, 300, 170);
         ctx.fillStyle = "#1e293b";
         ctx.font = "bold 16px sans-serif";
-        ctx.fillText("🌫️ KABUT OBAT BIUS 🌫️", 55, 175);
+        ctx.fillText("🌫️ KABUT OBAT BIUS 🌫️", 55, 160);
       }
 
       requestAnimationFrame(updateGame);
     }
 
-    // 5. Kuis Saat Kalah
+    // 7. Kuis Saat Tertabrak
     function tampilkanPertanyaan() {
       const soalAcak = bankSoal[Math.floor(Math.random() * bankSoal.length)];
+      const badge = document.getElementById("targetPlayerBadge");
+      
+      badge.innerText = `⚠️ ${pemainTertabrak.nama} Tertabrak!`;
+      badge.style.background = pemainTertabrak === player1 ? "#e11d48" : "#0284c7";
+      
       document.getElementById("questionText").innerText = soalAcak.tanya;
       
       const optionsBox = document.getElementById("optionsBox");
@@ -321,17 +513,20 @@
     function cekJawaban(isBenar) {
       document.getElementById("quizModal").style.display = "none";
       if (isBenar) {
-        alert("Benar! Pasien selamat, lanjutkan permainan!");
+        alert(`Benar! ${pemainTertabrak.nama} selamat, lanjutkan duel!`);
         enemies.forEach((e, idx) => e.y = -50 * (idx + 1));
         isGameOver = false;
         updateGame();
       } else {
-        alert(`Salah! Game Over. Skor akhir kamu: ${skor}`);
+        const pemenang = pemainTertabrak === player1 ? `${player2.nama} 💙` : `${player1.nama} ❤️`;
+        simpanSkorPemenang(pemenang, skor);
+        alert(`Salah! ${pemainTertabrak.nama} gugur.\n🏆 PEMENANGNYA: ${pemenang} (Skor: ${skor})`);
         location.reload();
       }
     }
 
-    updateGame();
+    // Tampilkan papan peringkat saat halaman pertama kali dibuka
+    muatPeringkat();
   </script>
 </body>
 </html>
