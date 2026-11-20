@@ -2,7 +2,6 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <!-- Mencegah layar HP zoom saat tombol sentuh ditekan cepat -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Game Kuis Rumah Sakit</title>
   <style>
@@ -15,7 +14,7 @@
       margin: 0;
       padding: 15px;
       transition: background 0.3s;
-      touch-action: manipulation; /* Responsif untuk sentuhan HP */
+      touch-action: manipulation;
     }
 
     body.darurat {
@@ -56,7 +55,6 @@
       100% { transform: translate(1px, -2px); }
     }
 
-    /* Tombol Kontrol Khusus HP (Sentuh Layar) */
     .mobile-controls {
       display: flex;
       justify-content: center;
@@ -95,15 +93,6 @@
       color: #1e293b;
     }
 
-    input {
-      padding: 10px;
-      margin: 5px;
-      border-radius: 8px;
-      border: 1px solid #94a3b8;
-      width: 85%;
-      max-width: 260px;
-    }
-
     button.aksi { 
       padding: 10px 16px; 
       margin: 5px; 
@@ -135,40 +124,16 @@
     <div id="optionsBox"></div>
   </div>
 
-  <!-- Form Tambah Pertanyaan -->
-  <div>
-    <h4>Tambah Pertanyaan Baru</h4>
-    <input type="text" id="inputSoal" placeholder="Tulis pertanyaan...">
-    <input type="text" id="inputJawabBenar" placeholder="Jawaban Benar">
-    <input type="text" id="inputJawabSalah" placeholder="Jawaban Salah">
-    <br>
-    <button class="aksi" onclick="tambahSoal()">Simpan Soal</button>
-  </div>
-
   <script>
     const canvas = document.getElementById("gameCanvas");
     const ctx = canvas.getContext("2d");
     const statusText = document.getElementById("statusGangguan");
 
-    // 1. Bank Soal
-    let bankSoal = JSON.parse(localStorage.getItem("soalGame")) || [
+    // 1. Bank Soal (Bisa ditambah langsung di dalam kode ini)
+    const bankSoal = [
       { tanya: "Ibu kota Indonesia adalah?", benar: "Jakarta", salah: "Bandung" },
       { tanya: "Organ tubuh yang memompa darah adalah?", benar: "Jantung", salah: "Paru-paru" }
     ];
-
-    function tambahSoal() {
-      const tanya = document.getElementById("inputSoal").value;
-      const benar = document.getElementById("inputJawabBenar").value;
-      const salah = document.getElementById("inputJawabSalah").value;
-      if (tanya && benar && salah) {
-        bankSoal.push({ tanya, benar, salah });
-        localStorage.setItem("soalGame", JSON.stringify(bankSoal));
-        alert("Soal berhasil disimpan!");
-        document.getElementById("inputSoal").value = "";
-        document.getElementById("inputJawabBenar").value = "";
-        document.getElementById("inputJawabSalah").value = "";
-      }
-    }
 
     // 2. Variabel Pemain, Musuh, & Gangguan
     let player = { x: 135, y: 330, size: 30 };
@@ -186,7 +151,6 @@
     let modeKabut = false;
     let modeDarurat = false;
 
-    // Fungsi Gerak Pemain (Bisa dipanggil dari Keyboard maupun Tombol HP)
     function gerakKiri() {
       if (isGameOver) return;
       if (!kontrolTerbalik) {
@@ -211,7 +175,7 @@
       if (e.key === "ArrowRight") gerakKanan();
     });
 
-    // Kontrol Tombol Layar Sentuh HP (Touch & Click)
+    // Kontrol Tombol Layar Sentuh HP
     const btnKiri = document.getElementById("btnKiri");
     const btnKanan = document.getElementById("btnKanan");
 
@@ -221,7 +185,7 @@
     btnKanan.addEventListener("touchstart", (e) => { e.preventDefault(); gerakKanan(); });
     btnKanan.addEventListener("click", gerakKanan);
 
-    // Kontrol Sentuh Langsung di Layar Game (Tap sisi kiri/kanan canvas)
+    // Kontrol Sentuh Langsung di Layar Game
     canvas.addEventListener("touchstart", (e) => {
       e.preventDefault();
       const rect = canvas.getBoundingClientRect();
