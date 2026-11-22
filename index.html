@@ -3,104 +3,297 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Kuis Medis 2 Player + Ranking</title>
+  <title>PharmaPulse: Respiratory & GI Challenge</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body { 
-      font-family: 'Segoe UI', sans-serif; 
+      font-family: 'Nunito', 'Segoe UI', sans-serif; 
       text-align: center; 
-      background: linear-gradient(135deg, #e0f2fe 0%, #f0fdf4 100%); 
-      color: #0f172a; 
+      background: linear-gradient(135deg, #ffe4e6 0%, #e0f2fe 50%, #fef9c3 100%); 
+      color: #334155; 
       min-height: 100vh;
       margin: 0;
-      padding: 10px;
+      padding: 14px;
       transition: background 0.3s;
       touch-action: manipulation;
     }
 
     body.darurat {
-      background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+      background: linear-gradient(135deg, #fecdd3 0%, #fda4af 100%);
+    }
+
+    /* Header Unyu */
+    .header-box {
+      max-width: 400px;
+      margin: 0 auto 12px auto;
+      background: rgba(255, 255, 255, 0.85);
+      padding: 12px 16px;
+      border-radius: 24px;
+      border: 3px solid #f9a8d4;
+      box-shadow: 0 6px 16px rgba(244, 114, 182, 0.18);
     }
 
     h2 {
+      color: #ec4899;
+      margin: 0;
+      font-size: 20px;
+      font-weight: 900;
+      letter-spacing: 0.3px;
+    }
+
+    .subtitle {
+      font-size: 12.5px;
       color: #0284c7;
-      margin: 4px 0;
-      font-size: 18px;
+      font-weight: 700;
+      margin: 4px 0 0 0;
+    }
+
+    /* HALAMAN 1: KETENTUAN PEMBUKA */
+    #halamanKetentuan {
+      max-width: 400px;
+      margin: 0 auto;
+      text-align: left;
+    }
+
+    .intro-banner {
+      background: linear-gradient(135deg, #fff1f2, #f0f9ff);
+      border: 2.5px solid #fbcfe8;
+      border-radius: 20px;
+      padding: 14px;
+      margin-bottom: 12px;
+      font-size: 13px;
+      line-height: 1.5;
+      box-shadow: 0 4px 12px rgba(236, 72, 153, 0.1);
+    }
+
+    .intro-banner strong.judul-intro {
+      display: block;
+      font-size: 15px;
+      color: #db2777;
+      margin-bottom: 6px;
+    }
+
+    .card-info {
+      background: rgba(255, 255, 255, 0.92);
+      border: 2.5px solid #bae6fd;
+      border-radius: 20px;
+      padding: 13px 15px;
+      margin-bottom: 10px;
+      font-size: 12.5px;
+      line-height: 1.5;
+      box-shadow: 0 4px 12px rgba(56, 189, 248, 0.1);
+    }
+
+    .card-info h4 {
+      margin: 0 0 6px 0;
+      color: #0284c7;
+      font-size: 14px;
+      font-weight: 800;
+      border-bottom: 2px dashed #e0f2fe;
+      padding-bottom: 4px;
+    }
+
+    .card-info ul, .card-info ol {
+      margin: 4px 0 4px 18px;
+      padding: 0;
+    }
+
+    .card-info li {
+      margin-bottom: 5px;
+    }
+
+    .confirm-box {
+      background: #fdf2f8;
+      border: 2.5px solid #f9a8d4;
+      border-radius: 20px;
+      padding: 14px;
+      margin: 12px 0;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(244, 114, 182, 0.15);
+    }
+
+    .checkbox-label {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 12.5px;
+      font-weight: 700;
+      color: #be185d;
+      text-align: left;
+      cursor: pointer;
+      margin-bottom: 12px;
+    }
+
+    .checkbox-label input {
+      margin-top: 3px;
+      transform: scale(1.25);
+      accent-color: #ec4899;
+      cursor: pointer;
+    }
+
+    #btnMasukGame {
+      width: 100%;
+      padding: 13px;
+      font-size: 14.5px;
+      font-weight: 800;
+      font-family: inherit;
+      border: none;
+      border-radius: 16px;
+      background: #cbd5e1;
+      color: #ffffff;
+      cursor: not-allowed;
+      transition: 0.25s;
+    }
+
+    #btnMasukGame.siap {
+      background: linear-gradient(90deg, #f472b6, #38bdf8);
+      cursor: pointer;
+      box-shadow: 0 5px 15px rgba(244, 114, 182, 0.35);
+    }
+
+    #btnMasukGame.siap:active {
+      transform: scale(0.97);
+    }
+
+    /* HALAMAN 2: ARENA DUEL UNYU */
+    #halamanGame {
+      display: none;
+      max-width: 360px;
+      margin: 0 auto;
+    }
+
+    .btn-kembali-info {
+      background: #ffffff;
+      border: 2px solid #f9a8d4;
+      color: #db2777;
+      font-size: 11.5px;
+      font-weight: 800;
+      font-family: inherit;
+      padding: 6px 14px;
+      border-radius: 20px;
+      cursor: pointer;
+      margin-bottom: 8px;
+      box-shadow: 0 2px 6px rgba(244, 114, 182, 0.15);
+    }
+
+    /* Panel Skor Duel Pastel */
+    .scoreboard-duel {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 320px;
+      margin: 4px auto 8px auto;
+      background: rgba(255, 255, 255, 0.92);
+      border: 2.5px solid #bae6fd;
+      border-radius: 18px;
+      padding: 8px 12px;
+      font-size: 12.5px;
+      font-weight: 800;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .score-p1 { color: #e11d48; }
+    .score-p2 { color: #0284c7; }
+    .round-badge {
+      background: #fef08a;
+      padding: 4px 9px;
+      border-radius: 12px;
+      color: #854d0e;
+      font-size: 11px;
+      border: 1.5px solid #fde047;
     }
 
     #statusGangguan {
-      font-weight: bold;
-      height: 20px;
-      color: #dc2626;
+      font-weight: 800;
+      min-height: 22px;
+      color: #db2777;
       margin-bottom: 6px;
-      font-size: 13px;
+      font-size: 12.5px;
+      background: rgba(255, 255, 255, 0.75);
+      display: inline-block;
+      padding: 3px 12px;
+      border-radius: 14px;
     }
 
-    /* Kotak Input Nama Sebelum Main */
-    #setupModal {
+    #setupModal, #rekapModal {
       background: #ffffff;
-      border: 3px solid #0284c7;
-      border-radius: 14px;
-      padding: 16px;
-      width: 270px;
-      margin: 10px auto;
-      box-shadow: 0 8px 20px rgba(2, 132, 199, 0.2);
+      border: 3px solid #f9a8d4;
+      border-radius: 22px;
+      padding: 18px;
+      width: 300px;
+      margin: 8px auto;
+      box-shadow: 0 8px 20px rgba(244, 114, 182, 0.18);
     }
 
     #setupModal input {
-      width: 88%;
-      padding: 8px 10px;
+      width: 90%;
+      padding: 10px 12px;
       margin: 6px 0;
-      border: 1.5px solid #94a3b8;
-      border-radius: 8px;
-      font-size: 14px;
+      border: 2px solid #fbcfe8;
+      border-radius: 14px;
+      font-size: 13px;
+      font-family: inherit;
+      font-weight: 700;
+      outline: none;
     }
 
-    /* Area Kontrol Pemain 2 (Atas - Biru) & Pemain 1 (Bawah - Merah) */
+    #setupModal input:focus {
+      border-color: #38bdf8;
+    }
+
+    /* Tombol Kontrol Sentuh Menggemaskan */
     .controls-box {
       display: flex;
       justify-content: center;
-      gap: 15px;
-      margin: 6px auto;
-      max-width: 300px;
+      gap: 14px;
+      margin: 8px auto;
+      max-width: 310px;
     }
 
     .btn-p2 {
       flex: 1;
-      padding: 12px 0;
-      font-size: 15px;
-      font-weight: bold;
-      background: linear-gradient(180deg, #0284c7, #0369a1);
-      color: white;
-      border: none;
-      border-radius: 12px;
-      box-shadow: 0 3px 8px rgba(2, 132, 199, 0.3);
+      padding: 13px 0;
+      font-size: 14px;
+      font-weight: 800;
+      font-family: inherit;
+      background: linear-gradient(180deg, #7dd3fc, #38bdf8);
+      color: #0c4a6e;
+      border: 2.5px solid #bae6fd;
+      border-radius: 18px;
+      box-shadow: 0 4px 0 #0284c7;
       user-select: none;
       -webkit-user-select: none;
     }
 
     .btn-p1 {
       flex: 1;
-      padding: 12px 0;
-      font-size: 15px;
-      font-weight: bold;
-      background: linear-gradient(180deg, #e11d48, #be123c);
-      color: white;
-      border: none;
-      border-radius: 12px;
-      box-shadow: 0 3px 8px rgba(225, 29, 72, 0.3);
+      padding: 13px 0;
+      font-size: 14px;
+      font-weight: 800;
+      font-family: inherit;
+      background: linear-gradient(180deg, #fbcfe8, #f472b6);
+      color: #831843;
+      border: 2.5px solid #fce7f3;
+      border-radius: 18px;
+      box-shadow: 0 4px 0 #db2777;
       user-select: none;
       -webkit-user-select: none;
     }
 
     .btn-p1:active, .btn-p2:active {
-      transform: scale(0.94);
+      transform: translateY(3px);
+      box-shadow: 0 1px 0 #94a3b8;
     }
 
     canvas { 
-      background: linear-gradient(180deg, #ffffff 0%, #f1f5f9 100%); 
-      border: 4px solid #0284c7; 
-      border-radius: 16px; 
-      box-shadow: 0 8px 20px rgba(2, 132, 199, 0.25); 
+      background: linear-gradient(180deg, #fff1f2 0%, #f0f9ff 60%, #fefce8 100%); 
+      border: 4px solid #f9a8d4; 
+      border-radius: 24px; 
+      box-shadow: 0 8px 22px rgba(244, 114, 182, 0.22); 
       display: block; 
       margin: 6px auto; 
       max-width: 100%;
@@ -116,139 +309,352 @@
       100% { transform: translate(1px, -2px); }
     }
 
-    #quizModal { 
+    /* Pop-up Pertanyaan & Pembahasan Ilmiah */
+    #quizModal, #feedbackModal { 
       display: none; 
       background: #ffffff; 
-      border: 3px solid #ef4444;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-      padding: 18px; 
-      width: 270px; 
+      border: 3.5px solid #38bdf8;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+      padding: 16px; 
+      width: 305px; 
       margin: 10px auto; 
-      border-radius: 12px; 
+      border-radius: 22px; 
       color: #1e293b;
+      text-align: left;
+    }
+
+    #quizModal {
+      border-color: #f472b6;
+      text-align: center;
     }
 
     #targetPlayerBadge {
       display: inline-block;
-      padding: 4px 10px;
+      padding: 5px 12px;
       border-radius: 20px;
       color: white;
       font-size: 12px;
-      font-weight: bold;
+      font-weight: 800;
       margin-bottom: 6px;
     }
 
-    button.aksi { 
-      padding: 10px 16px; 
-      margin: 5px; 
-      cursor: pointer; 
-      background: linear-gradient(90deg, #0284c7, #0d9488);
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-weight: bold;
+    .tema-tag {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 3px 10px;
+      border-radius: 12px;
+      background: #fef08a;
+      color: #854d0e;
+      margin-bottom: 6px;
     }
 
-    /* Papan Peringkat (Leaderboard) */
-    #leaderboardBox {
-      background: #ffffff;
-      border: 2px solid #cbd5e1;
+    .feedback-section {
+      font-size: 12px;
+      background: #f0f9ff;
+      padding: 10px;
       border-radius: 14px;
-      padding: 12px;
-      width: 280px;
+      border: 1.5px solid #bae6fd;
+      margin: 8px 0;
+      line-height: 1.45;
+    }
+
+    .safety-box {
+      font-size: 11.5px;
+      background: #fff1f2;
+      color: #9f1239;
+      padding: 10px;
+      border-radius: 14px;
+      border: 1.5px solid #fecdd3;
+      margin: 8px 0;
+      line-height: 1.45;
+    }
+
+    button.aksi { 
+      padding: 11px 16px; 
+      margin: 5px; 
+      cursor: pointer; 
+      background: linear-gradient(90deg, #f472b6, #38bdf8);
+      color: white;
+      border: none;
+      border-radius: 14px;
+      font-weight: 800;
+      font-family: inherit;
+      font-size: 13px;
+      box-shadow: 0 4px 10px rgba(244, 114, 182, 0.25);
+    }
+
+    button.opsi-btn {
+      display: block;
+      width: 100%;
+      text-align: left;
+      padding: 10px 12px;
+      margin: 7px 0;
+      cursor: pointer;
+      background: #fdf2f8;
+      color: #334155;
+      border: 2px solid #fbcfe8;
+      border-radius: 14px;
+      font-weight: 700;
+      font-family: inherit;
+      font-size: 12.5px;
+      transition: 0.15s;
+    }
+
+    button.opsi-btn:hover {
+      background: #e0f2fe;
+      border-color: #38bdf8;
+    }
+
+    /* Papan Peringkat */
+    #leaderboardBox {
+      background: rgba(255, 255, 255, 0.92);
+      border: 2.5px solid #fde047;
+      border-radius: 20px;
+      padding: 14px;
+      width: 305px;
       margin: 14px auto;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+      box-shadow: 0 4px 12px rgba(250, 204, 21, 0.15);
     }
 
     #leaderboardBox h4 {
       margin: 0 0 8px 0;
-      color: #0f172a;
-      font-size: 15px;
+      color: #ca8a04;
+      font-size: 14.5px;
+      font-weight: 900;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 13px;
+      font-size: 12.5px;
     }
 
     th, td {
       padding: 6px 4px;
-      border-bottom: 1px solid #e2e8f0;
+      border-bottom: 1.5px dashed #fef08a;
       text-align: center;
     }
 
     th {
-      background: #f1f5f9;
-      color: #0284c7;
+      background: #fef9c3;
+      color: #854d0e;
+      border-radius: 6px;
     }
 
     .btn-reset-rank {
       margin-top: 8px;
       background: transparent;
-      border: 1px solid #94a3b8;
+      border: 1.5px solid #cbd5e1;
       color: #64748b;
       font-size: 11px;
+      font-family: inherit;
+      font-weight: 700;
       padding: 4px 10px;
-      border-radius: 6px;
+      border-radius: 10px;
       cursor: pointer;
+    }
+
+    /* Pernyataan Wajib (Disclaimer) */
+    .disclaimer-box {
+      max-width: 380px;
+      margin: 12px auto 20px auto;
+      padding: 10px 14px;
+      background: rgba(255, 251, 235, 0.95);
+      border: 2px solid #fcd34d;
+      border-radius: 16px;
+      font-size: 11.5px;
+      color: #92400e;
+      font-weight: 700;
+      line-height: 1.4;
     }
   </style>
 </head>
 <body>
 
-  <h2>🏥 Kuis Medis: Duel 2 Pemain!</h2>
-  <div id="statusGangguan">Masukkan nama pemain untuk mulai</div>
-
-  <!-- Form Nama Pemain Sebelum Mulai -->
-  <div id="setupModal">
-    <h4 style="margin: 0 0 8px 0; color: #0284c7;">Siapa yang Bertanding?</h4>
-    <input type="text" id="inputNamaP1" placeholder="Nama Pemain 1 (Merah ❤️)">
-    <input type="text" id="inputNamaP2" placeholder="Nama Pemain 2 (Biru 💙)">
-    <br>
-    <button class="aksi" onclick="mulaiPermainan()">▶️ Mulai Duel</button>
+  <div class="header-box">
+    <h2>💊 PharmaPulse: Respiratory & GI Challenge ✨</h2>
+    <p class="subtitle">Duel Seru Farmakologi Sistem Pernapasan & Pencernaan</p>
   </div>
 
-  <!-- Area Game (Disembunyikan sebelum nama diisi) -->
-  <div id="areaGame" style="display: none;">
-    <!-- Tombol Kontrol Pemain 2 (Biru - Atas) -->
-    <div class="controls-box">
-      <button class="btn-p2" id="p2Kiri">⬅️ <span id="labelP2Kiri">P2</span></button>
-      <button class="btn-p2" id="p2Kanan"><span id="labelP2Kanan">P2</span> ➡️</button>
+  <!-- ========================================================= -->
+  <!-- TAHAP 1: HALAMAN PEMBUKA & KETENTUAN (WAJIB BACA)         -->
+  <!-- ========================================================= -->
+  <div id="halamanKetentuan">
+    <div class="intro-banner">
+      <strong class="judul-intro">Ready to challenge your pharmacology skills? 🧪</strong>
+      Di game ini, kamu dan lawanmu bakal adu strategi, kecepatan, dan pengetahuan seputar farmakologi sistem pernapasan dan pencernaan. Jangan cuma mengandalkan keberuntungan, karena setiap keputusan punya konsekuensi!
     </div>
 
-    <canvas id="gameCanvas" width="300" height="340"></canvas>
+    <div class="card-info">
+      <h4>🎮 1. Sebelum Mulai</h4>
+      <ul>
+        <li>Game dimainkan oleh <strong>2 pemain</strong> atau 2 tim kecil (1 vs 1 atau 2 vs 2).</li>
+        <li>Gunakan satu perangkat yang sama untuk bermain bersama.</li>
+        <li>Siapkan fokus dan pengetahuan farmakologimu!</li>
+        <li>Setiap sesi berlangsung sekitar <strong>10–15 menit</strong>.</li>
+      </ul>
+    </div>
 
-    <!-- Tombol Kontrol Pemain 1 (Merah - Bawah) -->
-    <div class="controls-box">
-      <button class="btn-p1" id="p1Kiri">⬅️ <span id="labelP1Kiri">P1</span></button>
-      <button class="btn-p1" id="p1Kanan"><span id="labelP1Kanan">P1</span> ➡️</button>
+    <div class="card-info">
+      <h4>⚡ 2. Cara Bermain</h4>
+      <ol>
+        <li><strong>Mulai Ronde:</strong> Tantangan soal akan muncul secara <strong>acak</strong> mencakup topik <em>sistem pernapasan</em> maupun <em>sistem pencernaan</em>.</li>
+        <li><strong>Duel Mini-Game:</strong> Adu cepat dan tepat bersama lawanmu menghindari kapsul hazard sambil mengantisipasi simulasi efek samping obat!</li>
+        <li><strong>Siap-Siap Kena Kuis!</strong> Pemain yang kalah/tertabrak dalam mini-game wajib menjawab satu pertanyaan farmakologi. Pertanyaannya bisa berupa tebak obat, analisis kasus pasien fiktif, hingga perhitungan dosis/infus.</li>
+        <li><strong>Jawab dan Rebut Poin!</strong> Jawaban benar bisa membantu memulihkan poin, sedangkan jawaban salah bisa membuat skor berkurang atau memberi keuntungan kepada lawan.</li>
+        <li><strong>Pelajari Pembahasannya:</strong> Setelah menjawab, akan muncul pembahasan singkat berbasis rujukan ilmiah dan <em>safety reminder</em> agar kamu nggak cuma tahu jawabannya, tetapi juga paham cara pemberian obat yang aman.</li>
+      </ol>
+    </div>
+
+    <div class="card-info">
+      <h4>🏆 3. Sistem Poin</h4>
+      <ul>
+        <li><strong>Menang/bertahan mini-game:</strong> Dapatkan poin keunggulan (+10 poin)!</li>
+        <li><strong>Kalah/tertabrak mini-game:</strong> Harus menghadapi kuis farmakologi.</li>
+        <li><strong>Jawaban benar:</strong> Raih poin pemulihan (+15 poin) atau kurangi penalti.</li>
+        <li><strong>Jawaban salah:</strong> Poin berkurang (-10 poin) dan lawan mendapat bonus (+20 poin).</li>
+      </ul>
+      <p style="margin: 4px 0 0 0; font-weight: 700; color: #db2777;">Ingat, setiap ronde bisa mengubah posisi skor. Jadi, jangan cepat puas!</p>
+    </div>
+
+    <div class="card-info">
+      <h4>💊 4. Apa Saja yang Akan Dihadapi?</h4>
+      <p style="margin: 0 0 4px 0;">Selama permainan, kamu akan menemukan berbagai tantangan tentang:</p>
+      <ul>
+        <li>Golongan dan mekanisme kerja obat.</li>
+        <li>Indikasi dan kontraindikasi.</li>
+        <li>Efek samping dan interaksi obat.</li>
+        <li>Perhitungan dosis dan kecepatan infus.</li>
+        <li>Analisis kasus keperawatan.</li>
+        <li>Prinsip benar pemberian obat dan pencegahan <em>medication error</em>.</li>
+      </ul>
+    </div>
+
+    <div class="card-info">
+      <h4>🚨 5. Jangan Lupakan Patient Safety!</h4>
+      <p style="margin: 0 0 4px 0;">Setiap jawaban bukan sekadar soal benar atau salah. Kamu juga perlu memahami keselamatan pasien.</p>
+      <p style="margin: 0;">Perhatikan prinsip pemberian obat yang benar, ketepatan dosis, rute pemberian, pemantauan efek samping, serta potensi interaksi obat. Karena dalam dunia keperawatan, <strong>kesalahan kecil dalam pemberian obat bisa berdampak besar bagi pasien.</strong></p>
+    </div>
+
+    <div class="card-info">
+      <h4>👑 6. Siapa yang Jadi Pemenang?</h4>
+      <p style="margin: 0 0 4px 0;">Permainan berakhir setelah seluruh <strong>5 ronde</strong> selesai atau salah satu pemain mencapai target skor <strong>150 poin</strong>.</p>
+      <p style="margin: 0 0 4px 0;">Pemain dengan poin tertinggi akan menjadi <strong>PharmaPulse Champion! 🏅</strong></p>
+      <p style="margin: 0;">Di akhir permainan, kamu juga akan mendapatkan rekap skor dan materi yang perlu dipelajari kembali.</p>
+    </div>
+
+    <div class="confirm-box">
+      <label class="checkbox-label">
+        <input type="checkbox" id="cekBacaKetentuan" onchange="toggleTombolMulai()">
+        <span>Aku sudah baca semua aturan main & siap menjaga Patient Safety! 💖</span>
+      </label>
+      <button id="btnMasukGame" disabled onclick="lanjutKeArenaGame()">🔒 Centang Dulu Sebelum Mulai Duel</button>
     </div>
   </div>
 
-  <!-- Pop-up Pertanyaan -->
-  <div id="quizModal">
-    <div id="targetPlayerBadge">Giliran Pemain</div>
-    <h3 id="questionText" style="margin: 8px 0; font-size: 16px;">Pertanyaan di sini</h3>
-    <div id="optionsBox"></div>
+  <!-- ========================================================= -->
+  <!-- TAHAP 2: ARENA DUEL UNYU (SOAL ACAK 2 SISTEM)             -->
+  <!-- ========================================================= -->
+  <div id="halamanGame">
+    <button class="btn-kembali-info" onclick="kembaliKeKetentuan()">📖 Baca Aturan Main Lagi</button>
+
+    <!-- Panel Skor Real-Time P1 vs P2 -->
+    <div class="scoreboard-duel">
+      <div class="score-p1">🍓 <span id="hudNamaP1">Tim 1</span>: <span id="hudSkorP1">0</span></div>
+      <div class="round-badge">Ronde <span id="hudRonde">1</span>/5 ⭐</div>
+      <div class="score-p2">🫐 <span id="hudNamaP2">Tim 2</span>: <span id="hudSkorP2">0</span></div>
+    </div>
+
+    <div>
+      <div id="statusGangguan">Isi nama pemain/tim dulu yuk! ✨</div>
+    </div>
+
+    <!-- Form Nama Pemain/Tim -->
+    <div id="setupModal">
+      <h4 style="margin: 0 0 8px 0; color: #ec4899; font-size: 15px;">🎀 Siapa yang Mau Duel? 🎀</h4>
+      <input type="text" id="inputNamaP1" placeholder="Nama Tim 1 (Strawberry 🍓)">
+      <input type="text" id="inputNamaP2" placeholder="Nama Tim 2 (Blueberry 🫐)">
+      <br>
+      <button class="aksi" onclick="mulaiLangsungAcak()">🚀 Mulai Duel Sekarang!</button>
+    </div>
+
+    <!-- Area Canvas & Kontrol Sentuh Unyu -->
+    <div id="areaGame" style="display: none;">
+      <div class="controls-box">
+        <button class="btn-p2" id="p2Kiri">⬅️ <span id="labelP2Kiri">P2</span></button>
+        <button class="btn-p2" id="p2Kanan"><span id="labelP2Kanan">P2</span> ➡️</button>
+      </div>
+
+      <canvas id="gameCanvas" width="300" height="320"></canvas>
+
+      <div class="controls-box">
+        <button class="btn-p1" id="p1Kiri">⬅️ <span id="labelP1Kiri">P1</span></button>
+        <button class="btn-p1" id="p1Kanan"><span id="labelP1Kanan">P1</span> ➡️</button>
+      </div>
+    </div>
+
+    <!-- Pop-up Pertanyaan Farmakologi -->
+    <div id="quizModal">
+      <div id="targetPlayerBadge">Waktunya Kuis!</div><br>
+      <span class="tema-tag" id="quizTemaTag">Topik Acak</span>
+      <p id="questionText" style="margin: 8px 0; font-size: 13.5px; font-weight: 700; line-height: 1.45;">Pertanyaan di sini</p>
+      <div id="optionsBox"></div>
+    </div>
+
+    <!-- Pop-up Umpan Balik Ilmiah & Keselamatan Pasien -->
+    <div id="feedbackModal">
+      <h4 id="feedbackTitle" style="margin: 0 0 6px 0; font-size: 14.5px; font-weight: 800;">Hasil Jawaban</h4>
+      <div class="feedback-section">
+        <strong>📚 Pembahasan & Rasional Farmakologi:</strong><br>
+        <span id="feedbackPembahasan"></span><br><br>
+        <strong>🔬 Rujukan Ilmiah:</strong><br>
+        <em id="feedbackReferensi"></em>
+      </div>
+      <div class="safety-box">
+        <strong>🛡️ Patient Safety Reminder:</strong><br>
+        <span id="feedbackSafety"></span>
+      </div>
+      <div style="text-align: center;">
+        <button class="aksi" id="btnLanjutFeedback">Lanjutkan Ronde ✨</button>
+      </div>
+    </div>
+
+    <!-- Rekap Skor Akhir & Materi yang Perlu Diulang -->
+    <div id="rekapModal" style="display: none; text-align: left;">
+      <h4 style="margin: 0 0 8px 0; color: #ec4899; text-align: center; font-size: 16px;">👑 Rekap PharmaPulse Champion! 👑</h4>
+      <div id="rekapSkorSummary" style="background: #fdf2f8; padding: 12px; border-radius: 14px; font-size: 13px; margin-bottom: 10px; border: 1.5px solid #fbcfe8;"></div>
+      <div style="background: #fefce8; border: 1.5px solid #fde047; padding: 10px; border-radius: 14px; font-size: 12px; margin-bottom: 10px;">
+        <strong>📌 Materi yang Perlu Dipelajari Kembali:</strong>
+        <ul id="listMateriUlang" style="margin: 6px 0 0 18px; padding: 0;"></ul>
+      </div>
+      <div style="text-align: center;">
+        <button class="aksi" onclick="location.reload()">🔄 Main Sesi Baru</button>
+      </div>
+    </div>
+
+    <!-- Papan Peringkat Top 5 -->
+    <div id="leaderboardBox">
+      <h4>🏅 PharmaPulse Champions (Top 5)</h4>
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Champion</th>
+            <th>Skor</th>
+          </tr>
+        </thead>
+        <tbody id="rankingBody">
+          <tr><td colspan="3">Belum ada champion tercatat</td></tr>
+        </tbody>
+      </table>
+      <button class="btn-reset-rank" onclick="resetPeringkat()">Reset Peringkat</button>
+    </div>
   </div>
 
-  <!-- Papan Peringkat Top 5 -->
-  <div id="leaderboardBox">
-    <h4>🏆 Papan Peringkat (Top 5)</h4>
-    <table>
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Pemenang</th>
-          <th>Skor</th>
-        </tr>
-      </thead>
-      <tbody id="rankingBody">
-        <tr><td colspan="3">Belum ada data skor</td></tr>
-      </tbody>
-    </table>
-    <button class="btn-reset-rank" onclick="resetPeringkat()">Reset Peringkat</button>
+  <!-- Pernyataan Wajib (Disclaimer) -->
+  <div class="disclaimer-box">
+    ⚠️ "Game ini merupakan media edukasi dan tidak menggantikan konsultasi dengan dokter, perawat, atau apoteker."
   </div>
 
   <script>
@@ -256,40 +662,148 @@
     const ctx = canvas.getContext("2d");
     const statusText = document.getElementById("statusGangguan");
 
-    // 1. Bank Soal
-    const bankSoal = [
-      { tanya: "Ibu kota Indonesia adalah?", benar: "Jakarta", salah: "Bandung" },
-      { tanya: "Organ tubuh yang memompa darah adalah?", benar: "Jantung", salah: "Paru-paru" },
-      { tanya: "Suhu tubuh normal manusia sekitar?", benar: "36,5°C - 37,5°C", salah: "40°C - 42°C" },
-      { tanya: "Sel darah yang berfungsi mengangkut oksigen adalah?", benar: "Sel darah merah", salah: "Keping darah" }
+    // Perpindahan Halaman Ketentuan <-> Arena Game
+    function toggleTombolMulai() {
+      const cek = document.getElementById("cekBacaKetentuan").checked;
+      const btn = document.getElementById("btnMasukGame");
+      btn.disabled = !cek;
+      if (cek) {
+        btn.classList.add("siap");
+        btn.innerText = "🎮 Masuk ke Arena Duel Unyu! ✨";
+      } else {
+        btn.classList.remove("siap");
+        btn.innerText = "🔒 Centang Dulu Sebelum Mulai Duel";
+      }
+    }
+
+    function lanjutKeArenaGame() {
+      document.getElementById("halamanKetentuan").style.display = "none";
+      document.getElementById("halamanGame").style.display = "block";
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function kembaliKeKetentuan() {
+      if (!isGameOver) {
+        alert("Selesaikan ronde yang sedang berjalan dulu ya sebelum melihat panduan! 🌸");
+        return;
+      }
+      document.getElementById("halamanGame").style.display = "none";
+      document.getElementById("halamanKetentuan").style.display = "block";
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    // 1. Bank Soal Gabungan (Sistem Pernapasan & Sistem Pencernaan Diacak Otomatis)
+    const bankSoalAcak = [
+      {
+        sistem: "🫁 Sistem Pernapasan",
+        topik: "Agonis Beta-2 Kerja Singkat (SABA) - Salbutamol",
+        tanya: "Tn. R (45 tahun) datang ke IGD dengan serangan asma akut dan diresepkan nebulisasi Salbutamol 2,5 mg/2,5 mL. Efek samping utama yang wajib dipantau perawat setelah pemberian obat ini adalah...",
+        benar: "Takikardia (jantung berdebar) dan tremor halus pada tangan",
+        salah: "Bradikardi berat dan hipoglikemia mendadak",
+        pembahasan: "Salbutamol menstimulasi reseptor beta-2 adrenergik di otot polos bronkus untuk bronkodilatasi, namun stimulasi silang pada reseptor beta-1 jantung dan otot rangka sering menimbulkan takikardia serta tremor.",
+        referensi: "Katzung, B.G. (2018). Basic & Clinical Pharmacology, 14th Ed.; GINA Asthma Management Guidelines.",
+        safety: "Prinsip Benar Pemantauan: Pantau frekuensi nadi dan keluhan berdebar pasien sebelum dan sesudah terapi inhalasi SABA."
+      },
+      {
+        sistem: "🫁 Sistem Pernapasan",
+        topik: "Kortikosteroid Inhalasi - Budesonide",
+        tanya: "Ny. S (32 tahun) mendapat terapi pemeliharaan inhaler Budesonide 200 mcg 2x1 hisap untuk asma persisten. Edukasi keperawatan terpenting segera setelah pasien menghisap obat ini adalah...",
+        benar: "Berkumur dengan air bersih dan membuangnya (jangan ditelan)",
+        salah: "Menahan makan dan minum selama 3 jam",
+        pembahasan: "Sisa partikel kortikosteroid inhalasi yang mengendap di mukosa orofaring dapat menekan imunitas lokal dan memicu infeksi jamur kandidiasis oral serta suara serak (disfonia).",
+        referensi: "Dipiro, J.T. et al. (2020). Pharmacotherapy: A Pathophysiologic Approach, 11th Ed.",
+        safety: "Prinsip Benar Edukasi Pasien: Pastikan pasien selalu berkumur dan meludahkan air bilasan setiap selesai menggunakan inhaler kortikosteroid."
+      },
+      {
+        sistem: "🫁 Sistem Pernapasan",
+        topik: "Perhitungan Dosis & Indeks Terapi Sempit - Aminofilin",
+        tanya: "An. D (BB 20 kg) mendapat order loading dose Aminofilin IV 5 mg/kgBB. Sediaan ampul yang tersedia adalah 240 mg/10 mL (24 mg/mL). Berapa mL volume obat yang harus diambil perawat?",
+        benar: "4,17 mL (total dosis 100 mg)",
+        salah: "2,40 mL (total dosis 57,6 mg)",
+        pembahasan: "Total dosis = 5 mg/kgBB × 20 kg = 100 mg. Konsentrasi sediaan = 240 mg / 10 mL = 24 mg/mL. Volume yang diambil = 100 mg ÷ 24 mg/mL = 4,166 mL ≈ 4,17 mL.",
+        referensi: "Kee, J.L., Hayes, E.R., & McCuistion, L.E. (2015). Pharmacology: A Patient-Centered Nursing Process Approach.",
+        safety: "Prinsip Benar Dosis & High Alert: Aminofilin memiliki indeks terapi sempit; berikan secara infus lambat (maksimal 20–25 mg/menit) untuk mencegah aritmia fatal."
+      },
+      {
+        sistem: "🍽️ Sistem Pencernaan",
+        topik: "Proton Pump Inhibitor (PPI) - Omeprazole",
+        tanya: "Tn. B (50 tahun) dengan diagnosis ulkus peptikum diresepkan Omeprazole 20 mg PO 1x1. Waktu pemberian yang paling tepat agar efektivitas obat optimal adalah...",
+        benar: "30–60 menit sebelum makan pagi",
+        salah: "Segera setelah makan malam berlemak",
+        pembahasan: "Omeprazole bekerja menghambat pompa proton (H+/K+ ATPase) sel parietal lambung yang hanya aktif secara maksimal saat distimulasi oleh masuknya makanan.",
+        referensi: "Informatorium Obat Nasional Indonesia (IONI), BPOM RI; Brunton, L.L. Goodman & Gilman's.",
+        safety: "Prinsip Benar Waktu & Rute: Kapsul lepas tunda Omeprazole harus ditelan utuh (tidak boleh digerus/dikunyah) agar tidak rusak oleh asam lambung."
+      },
+      {
+        sistem: "🍽️ Sistem Pencernaan",
+        topik: "Interaksi Obat & Sitoprotektor - Sukralfat",
+        tanya: "Ny. K (48 tahun) mendapatkan terapi Sukralfat suspensi 1 g/10 mL dan Ciprofloxacin 500 mg tablet. Bagaimana pengaturan jadwal pemberian kedua obat tersebut?",
+        benar: "Beri jeda minimal 2 jam (Ciprofloxacin diberikan 2 jam sebelum Sukralfat)",
+        salah: "Diminum bersamaan agar mengurangi iritasi lambung",
+        pembahasan: "Sukralfat mengandung gugus aluminium yang membentuk lapisan pelindung mukosa lambung sekaligus mengikat (khelasi) antibiotik fluorokuinolon sehingga penyerapan Ciprofloxacin turun drastis.",
+        referensi: "Stockley's Drug Interactions; Pionas BPOM RI.",
+        safety: "Prinsip Benar Interaksi Obat: Selalu cek potensi khelasi pada obat yang mengandung aluminium, magnesium, atau kalsium sebelum diberikan bersamaan dengan antibiotik."
+      },
+      {
+        sistem: "🍽️ Sistem Pencernaan",
+        topik: "Antiemetik Antagonis Reseptor 5-HT3 - Ondansetron",
+        tanya: "Nn. M (24 tahun) pasca-kemoterapi mendapat injeksi Ondansetron IV 8 mg dalam 50 mL NaCl 0,9% habis dalam 15 menit. Jika menggunakan faktor tetes makro 20 tetes/mL, berapa kecepatan tetes infusnya?",
+        benar: "67 tetes/menit",
+        salah: "33 tetes/menit",
+        pembahasan: "Rumus kecepatan infus = (Volume 50 mL × Faktor tetes 20) ÷ Waktu 15 menit = 1.000 ÷ 15 = 66,67 tetes/menit ≈ 67 tetes/menit.",
+        referensi: "Potter & Perry's Fundamentals of Nursing; Medscape Drug Monograph: Ondansetron.",
+        safety: "Prinsip Benar Dokumentasi & Monitoring: Pemberian Ondansetron IV dosis tinggi berisiko memanjangkan interval QT pada EKG; pantau irama jantung pada pasien berisiko."
+      }
     ];
 
-    // 2. Variabel 2 Pemain & Musuh
-    let player1 = { x: 185, y: 295, size: 28, nama: "Pemain 1" };
-    let player2 = { x: 85,  y: 295, size: 28, nama: "Pemain 2" };
+    // 2. Variabel Permainan Duel Unyu
+    let player1 = { x: 185, y: 270, size: 32, nama: "Tim 1", skor: 0 };
+    let player2 = { x: 85,  y: 270, size: 32, nama: "Tim 2", skor: 0 };
     let pemainTertabrak = null;
+    let soalAktif = null;
+
+    let rondeSekarang = 1;
+    const maxRonde = 5;
+    const targetSkorMenang = 150;
+    let materiPerluDiulang = [];
+    let daftarIndeksTerpakai = [];
+
+    // Musuh berbentuk kapsul imut berwarna-warni
+    const warnaKapsul = [
+      { atas: "#f472b6", bawah: "#ffffff" },
+      { atas: "#38bdf8", bawah: "#fef08a" },
+      { atas: "#a78bfa", bawah: "#ffffff" }
+    ];
 
     let enemies = [
-      { x: Math.random() * 270, y: 0, size: 26, speed: 2.8 },
-      { x: Math.random() * 270, y: -140, size: 26, speed: 3.2 },
-      { x: Math.random() * 270, y: -280, size: 26, speed: 3.6 }
+      { x: Math.random() * 265, y: 0, size: 26, speed: 2.6, warna: warnaKapsul[0] },
+      { x: Math.random() * 265, y: -140, size: 26, speed: 3.0, warna: warnaKapsul[1] },
+      { x: Math.random() * 265, y: -280, size: 26, speed: 3.4, warna: warnaKapsul[2] }
     ];
 
     let isGameOver = true;
-    let skor = 0;
     let frameCount = 0;
+    let hazardLewatRondeIni = 0;
 
     let kontrolTerbalik = false;
     let modeKabut = false;
     let modeDarurat = false;
 
-    // 3. Sistem Papan Peringkat (Leaderboard)
+    function perbaruiHUD() {
+      document.getElementById("hudNamaP1").innerText = player1.nama.slice(0, 10);
+      document.getElementById("hudSkorP1").innerText = player1.skor;
+      document.getElementById("hudNamaP2").innerText = player2.nama.slice(0, 10);
+      document.getElementById("hudSkorP2").innerText = player2.skor;
+      document.getElementById("hudRonde").innerText = rondeSekarang;
+    }
+
+    // 3. Papan Peringkat
     function muatPeringkat() {
-      const dataRank = JSON.parse(localStorage.getItem("rankingKuisMedis")) || [];
+      const dataRank = JSON.parse(localStorage.getItem("rankingPharmaPulseUnyu")) || [];
       const tbody = document.getElementById("rankingBody");
 
       if (dataRank.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="3" style="color:#64748b;">Belum ada pemenang tercatat</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="3" style="color:#94a3b8;">Belum ada champion tercatat ✨</td></tr>`;
         return;
       }
 
@@ -306,26 +820,25 @@
     }
 
     function simpanSkorPemenang(namaPemenang, skorAkhir) {
-      let dataRank = JSON.parse(localStorage.getItem("rankingKuisMedis")) || [];
+      let dataRank = JSON.parse(localStorage.getItem("rankingPharmaPulseUnyu")) || [];
       dataRank.push({ nama: namaPemenang, skor: skorAkhir });
-      // Urutkan dari skor terbesar ke terkecil, ambil 5 teratas
       dataRank.sort((a, b) => b.skor - a.skor);
       dataRank = dataRank.slice(0, 5);
-      localStorage.setItem("rankingKuisMedis", JSON.stringify(dataRank));
+      localStorage.setItem("rankingPharmaPulseUnyu", JSON.stringify(dataRank));
       muatPeringkat();
     }
 
     function resetPeringkat() {
-      if (confirm("Hapus semua daftar peringkat?")) {
-        localStorage.removeItem("rankingKuisMedis");
+      if (confirm("Hapus semua daftar PharmaPulse Champion?")) {
+        localStorage.removeItem("rankingPharmaPulseUnyu");
         muatPeringkat();
       }
     }
 
-    // 4. Mulai Permainan Setelah Nama Diisi
-    function mulaiPermainan() {
-      const nama1 = document.getElementById("inputNamaP1").value.trim() || "Pemain 1";
-      const nama2 = document.getElementById("inputNamaP2").value.trim() || "Pemain 2";
+    // 4. Mulai Langsung Tanpa Pemilihan Sistem (Soal Acak 2 Sistem)
+    function mulaiLangsungAcak() {
+      const nama1 = document.getElementById("inputNamaP1").value.trim() || "Tim 1";
+      const nama2 = document.getElementById("inputNamaP2").value.trim() || "Tim 2";
 
       player1.nama = nama1;
       player2.nama = nama2;
@@ -335,24 +848,35 @@
       document.getElementById("labelP2Kiri").innerText = nama2.slice(0, 8);
       document.getElementById("labelP2Kanan").innerText = nama2.slice(0, 8);
 
+      perbaruiHUD();
       document.getElementById("setupModal").style.display = "none";
       document.getElementById("areaGame").style.display = "block";
 
+      mulaiRondeBaru();
+    }
+
+    function mulaiRondeBaru() {
+      hazardLewatRondeIni = 0;
+      player1.x = 185;
+      player2.x = 85;
+      enemies.forEach((e, idx) => {
+        e.y = -60 * (idx + 1);
+        e.x = Math.random() * 265;
+      });
       isGameOver = false;
       updateGame();
     }
 
-    // Fungsi Gerak Pemain
     function gerakP1(arah) {
       if (isGameOver) return;
       const langkah = (arah === "kiri" ? -24 : 24) * (kontrolTerbalik ? -1 : 1);
-      player1.x = Math.max(0, Math.min(272, player1.x + langkah));
+      player1.x = Math.max(2, Math.min(266, player1.x + langkah));
     }
 
     function gerakP2(arah) {
       if (isGameOver) return;
       const langkah = (arah === "kiri" ? -24 : 24) * (kontrolTerbalik ? -1 : 1);
-      player2.x = Math.max(0, Math.min(272, player2.x + langkah));
+      player2.x = Math.max(2, Math.min(266, player2.x + langkah));
     }
 
     document.addEventListener("keydown", (e) => {
@@ -373,11 +897,11 @@
     pasangTombol("p2Kiri", () => gerakP2("kiri"));
     pasangTombol("p2Kanan", () => gerakP2("kanan"));
 
-    // 5. Pengatur Gangguan
+    // 5. Pengatur Simulasi Efek Obat
     function kelolaGangguan() {
       frameCount++;
 
-      if (frameCount % 420 === 0) {
+      if (frameCount % 400 === 0) {
         const acak = Math.floor(Math.random() * 4);
         kontrolTerbalik = false;
         modeKabut = false;
@@ -395,137 +919,277 @@
       }
 
       if (kontrolTerbalik) {
-        statusText.innerText = `😵 EFEK OBAT: Kontrol Terbalik! (Skor: ${skor})`;
+        statusText.innerText = `😵 Efek Obat: Pusing & Kontrol Terbalik!`;
       } else if (modeKabut) {
-        statusText.innerText = `🌫️ EFEK BIUS: Pandangan Kabur! (Skor: ${skor})`;
+        statusText.innerText = `☁️ Efek Antihistamin: Mengantuk & Berkabut!`;
       } else if (modeDarurat) {
-        statusText.innerText = `🚨 SIRENE DARURAT: Bergetar! (Skor: ${skor})`;
+        statusText.innerText = `🚨 Kode Darurat: Waspada Kapsul Hazard!`;
       } else {
-        statusText.innerText = `✅ Status: Normal (Skor: ${skor})`;
+        statusText.innerText = `✨ Ronde ${rondeSekarang}/5 • Hindari Kapsul Hazard!`;
       }
     }
 
-    function gambarHati(p, warnaNormal) {
-      ctx.fillStyle = kontrolTerbalik ? "#9333ea" : warnaNormal;
+    // Gambar Karakter Hati Unyu (Dengan Mata & Pipi Merona)
+    function gambarKarakterUnyu(p, warnaBadan, warnaPipi) {
       const x = p.x, y = p.y, s = p.size;
+      const bounce = Math.sin(frameCount * 0.15) * 2; // Animasi membal imut
+
+      ctx.fillStyle = kontrolTerbalik ? "#c084fc" : warnaBadan;
       ctx.beginPath();
-      ctx.moveTo(x + s / 2, y + s * 0.3);
-      ctx.bezierCurveTo(x + s / 2, y, x, y, x, y + s * 0.35);
-      ctx.bezierCurveTo(x, y + s * 0.65, x + s / 2, y + s * 0.85, x + s / 2, y + s);
-      ctx.bezierCurveTo(x + s / 2, y + s * 0.85, x + s, y + s * 0.65, x + s, y + s * 0.35);
-      ctx.bezierCurveTo(x + s, y, x + s / 2, y, x + s / 2, y + s * 0.3);
+      ctx.moveTo(x + s / 2, y + bounce + s * 0.3);
+      ctx.bezierCurveTo(x + s / 2, y + bounce, x, y + bounce, x, y + bounce + s * 0.35);
+      ctx.bezierCurveTo(x, y + bounce + s * 0.65, x + s / 2, y + bounce + s * 0.85, x + s / 2, y + bounce + s);
+      ctx.bezierCurveTo(x + s / 2, y + bounce + s * 0.85, x + s, y + bounce + s * 0.65, x + s, y + bounce + s * 0.35);
+      ctx.bezierCurveTo(x + s, y + bounce, x + s / 2, y + bounce, x + s / 2, y + bounce + s * 0.3);
+      ctx.fill();
+
+      // Mata imut
+      ctx.fillStyle = "#1e293b";
+      ctx.beginPath();
+      ctx.arc(x + s * 0.34, y + bounce + s * 0.48, 2.3, 0, Math.PI * 2);
+      ctx.arc(x + s * 0.66, y + bounce + s * 0.48, 2.3, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Kilau mata putih
+      ctx.fillStyle = "#ffffff";
+      ctx.beginPath();
+      ctx.arc(x + s * 0.33, y + bounce + s * 0.46, 0.9, 0, Math.PI * 2);
+      ctx.arc(x + s * 0.65, y + bounce + s * 0.46, 0.9, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Pipi merona (blush)
+      ctx.fillStyle = warnaPipi;
+      ctx.beginPath();
+      ctx.ellipse(x + s * 0.24, y + bounce + s * 0.56, 2.8, 1.6, 0, 0, Math.PI * 2);
+      ctx.ellipse(x + s * 0.76, y + bounce + s * 0.56, 2.8, 1.6, 0, 0, Math.PI * 2);
       ctx.fill();
     }
 
-    function kenaPanah(p, enemy) {
+    // Gambar Musuh Berbentuk Kapsul Obat Pastel Imut
+    function gambarKapsulUnyu(enemy) {
+      const ex = enemy.x + enemy.size / 2;
+      const ey = enemy.y + enemy.size / 2;
+      const w = 14, h = 24;
+
+      ctx.save();
+      ctx.translate(ex, ey);
+
+      // Bagian atas kapsul
+      ctx.fillStyle = modeDarurat ? "#fb7185" : enemy.warna.atas;
+      ctx.beginPath();
+      ctx.arc(0, -h / 4, w / 2, Math.PI, 0);
+      ctx.lineTo(w / 2, 0);
+      ctx.lineTo(-w / 2, 0);
+      ctx.closePath();
+      ctx.fill();
+
+      // Bagian bawah kapsul
+      ctx.fillStyle = enemy.warna.bawah;
+      ctx.beginPath();
+      ctx.arc(0, h / 4, w / 2, 0, Math.PI);
+      ctx.lineTo(-w / 2, 0);
+      ctx.lineTo(w / 2, 0);
+      ctx.closePath();
+      ctx.fill();
+
+      // Garis tepi kapsul lembut
+      ctx.strokeStyle = "#475569";
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.roundRect(-w / 2, -h / 2, w, h, w / 2);
+      ctx.stroke();
+
+      ctx.restore();
+    }
+
+    function kenaHazard(p, enemy) {
       return (
-        p.x < enemy.x + enemy.size - 4 &&
-        p.x + p.size - 4 > enemy.x &&
-        p.y < enemy.y + enemy.size - 4 &&
-        p.y + p.size - 4 > enemy.y
+        p.x < enemy.x + enemy.size - 5 &&
+        p.x + p.size - 5 > enemy.x &&
+        p.y < enemy.y + enemy.size - 5 &&
+        p.y + p.size - 5 > enemy.y
       );
     }
 
-    // 6. Loop Utama Game
+    // 6. Loop Mini-Game Duel Unyu
     function updateGame() {
       if (isGameOver) return;
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       kelolaGangguan();
 
-      // Palang Medis Rumah Sakit
-      ctx.fillStyle = "rgba(239, 68, 68, 0.12)";
-      ctx.fillRect(135, 125, 30, 90);
-      ctx.fillRect(105, 155, 90, 30);
+      // Dekorasi Palang Medis Pastel & Bintang Kecil di Latar
+      ctx.fillStyle = "rgba(244, 114, 182, 0.12)";
+      ctx.beginPath();
+      ctx.roundRect(135, 115, 30, 90, 10);
+      ctx.roundRect(105, 145, 90, 30, 10);
+      ctx.fill();
 
-      gambarHati(player1, "#e11d48");
-      gambarHati(player2, "#0284c7");
+      gambarKarakterUnyu(player1, "#fb7185", "#fda4af"); // Tim 1 Strawberry Pink
+      gambarKarakterUnyu(player2, "#38bdf8", "#bae6fd"); // Tim 2 Blueberry Blue
 
       for (let i = 0; i < enemies.length; i++) {
         let enemy = enemies[i];
         enemy.y += enemy.speed;
 
-        if (enemy.y > 340) {
+        if (enemy.y > 320) {
           enemy.y = -40;
-          enemy.x = Math.random() * 270;
-          skor += 10;
-          if (enemy.speed < 6.5) enemy.speed += 0.12;
+          enemy.x = Math.random() * 265;
+          hazardLewatRondeIni++;
+          if (hazardLewatRondeIni % 3 === 0) {
+            player1.skor += 10;
+            player2.skor += 10;
+            perbaruiHUD();
+            if (cekKondisiSelesai()) return;
+          }
+          if (enemy.speed < 6.0) enemy.speed += 0.1;
         }
 
-        ctx.fillStyle = modeDarurat ? "#dc2626" : "#334155";
-        const ex = enemy.x, ey = enemy.y, es = enemy.size;
-        ctx.beginPath();
-        ctx.moveTo(ex + es * 0.35, ey);
-        ctx.lineTo(ex + es * 0.65, ey);
-        ctx.lineTo(ex + es * 0.65, ey + es * 0.55);
-        ctx.lineTo(ex + es, ey + es * 0.55);
-        ctx.lineTo(ex + es * 0.5, ey + es);
-        ctx.lineTo(ex, ey + es * 0.55);
-        ctx.lineTo(ex + es * 0.35, ey + es * 0.55);
-        ctx.closePath();
-        ctx.fill();
+        gambarKapsulUnyu(enemy);
 
-        if (kenaPanah(player1, enemy)) {
+        if (kenaHazard(player1, enemy)) {
           pemainTertabrak = player1;
           isGameOver = true;
           canvas.classList.remove("gempa");
-          tampilkanPertanyaan();
+          tampilkanPertanyaanAcak();
           return;
         }
-        if (kenaPanah(player2, enemy)) {
+        if (kenaHazard(player2, enemy)) {
           pemainTertabrak = player2;
           isGameOver = true;
           canvas.classList.remove("gempa");
-          tampilkanPertanyaan();
+          tampilkanPertanyaanAcak();
           return;
         }
       }
 
       if (modeKabut) {
-        ctx.fillStyle = "rgba(148, 163, 184, 0.78)";
-        ctx.fillRect(0, 70, 300, 170);
-        ctx.fillStyle = "#1e293b";
-        ctx.font = "bold 16px sans-serif";
-        ctx.fillText("🌫️ KABUT OBAT BIUS 🌫️", 55, 160);
+        ctx.fillStyle = "rgba(241, 245, 249, 0.82)";
+        ctx.beginPath();
+        ctx.roundRect(12, 65, 276, 160, 20);
+        ctx.fill();
+        ctx.fillStyle = "#64748b";
+        ctx.font = "800 15px Nunito, sans-serif";
+        ctx.fillText("☁️ Zzz... Efek Kantuk Obat! ☁️", 45, 150);
       }
 
       requestAnimationFrame(updateGame);
     }
 
-    // 7. Kuis Saat Tertabrak
-    function tampilkanPertanyaan() {
-      const soalAcak = bankSoal[Math.floor(Math.random() * bankSoal.length)];
+    // 7. Kuis Acak (Pernapasan & Pencernaan Digabung)
+    function tampilkanPertanyaanAcak() {
+      if (daftarIndeksTerpakai.length >= bankSoalAcak.length) {
+        daftarIndeksTerpakai = [];
+      }
+      let idxAcak;
+      do {
+        idxAcak = Math.floor(Math.random() * bankSoalAcak.length);
+      } while (daftarIndeksTerpakai.includes(idxAcak));
+
+      daftarIndeksTerpakai.push(idxAcak);
+      soalAktif = bankSoalAcak[idxAcak];
+
       const badge = document.getElementById("targetPlayerBadge");
-      
-      badge.innerText = `⚠️ ${pemainTertabrak.nama} Tertabrak!`;
-      badge.style.background = pemainTertabrak === player1 ? "#e11d48" : "#0284c7";
-      
-      document.getElementById("questionText").innerText = soalAcak.tanya;
-      
+      badge.innerText = `💥 ${pemainTertabrak.nama} Kena Kapsul — Siap-Siap Kuis!`;
+      badge.style.background = pemainTertabrak === player1 ? "#f43f5e" : "#0284c7";
+
+      document.getElementById("quizTemaTag").innerText = `${soalAktif.sistem}`;
+      document.getElementById("questionText").innerText = soalAktif.tanya;
+
+      const opsi = [
+        { teks: `A. ${soalAktif.benar}`, benar: true },
+        { teks: `B. ${soalAktif.salah}`, benar: false }
+      ].sort(() => Math.random() - 0.5);
+
       const optionsBox = document.getElementById("optionsBox");
-      optionsBox.innerHTML = `
-        <button class="aksi" onclick="cekJawaban(true)">${soalAcak.benar}</button>
-        <button class="aksi" onclick="cekJawaban(false)">${soalAcak.salah}</button>
-      `;
+      optionsBox.innerHTML = opsi.map(o =>
+        `<button class="opsi-btn" onclick="cekJawaban(${o.benar})">${o.teks}</button>`
+      ).join("");
+
       document.getElementById("quizModal").style.display = "block";
     }
 
     function cekJawaban(isBenar) {
       document.getElementById("quizModal").style.display = "none";
+
+      const feedbackTitle = document.getElementById("feedbackTitle");
+      const btnLanjut = document.getElementById("btnLanjutFeedback");
+      const lawan = pemainTertabrak === player1 ? player2 : player1;
+
       if (isBenar) {
-        alert(`Benar! ${pemainTertabrak.nama} selamat, lanjutkan duel!`);
-        enemies.forEach((e, idx) => e.y = -50 * (idx + 1));
-        isGameOver = false;
-        updateGame();
+        pemainTertabrak.skor += 15;
+        feedbackTitle.innerText = `🎉 Yeay Benar! ${pemainTertabrak.nama} Pulih +15 Poin!`;
+        feedbackTitle.style.color = "#059669";
       } else {
-        const pemenang = pemainTertabrak === player1 ? `${player2.nama} 💙` : `${player1.nama} ❤️`;
-        simpanSkorPemenang(pemenang, skor);
-        alert(`Salah! ${pemainTertabrak.nama} gugur.\n🏆 PEMENANGNYA: ${pemenang} (Skor: ${skor})`);
-        location.reload();
+        pemainTertabrak.skor = Math.max(0, pemainTertabrak.skor - 10);
+        lawan.skor += 20;
+        if (!materiPerluDiulang.includes(`${soalAktif.sistem}: ${soalAktif.topik}`)) {
+          materiPerluDiulang.push(`${soalAktif.sistem}: ${soalAktif.topik}`);
+        }
+        feedbackTitle.innerText = `💦 Ups Kurang Tepat! ${pemainTertabrak.nama} (-10), ${lawan.nama} (+20)`;
+        feedbackTitle.style.color = "#e11d48";
       }
+
+      perbaruiHUD();
+
+      document.getElementById("feedbackPembahasan").innerText = soalAktif.pembahasan;
+      document.getElementById("feedbackReferensi").innerText = soalAktif.referensi;
+      document.getElementById("feedbackSafety").innerText = soalAktif.safety;
+      document.getElementById("feedbackModal").style.display = "block";
+
+      btnLanjut.innerText = (rondeSekarang >= maxRonde || player1.skor >= targetSkorMenang || player2.skor >= targetSkorMenang)
+        ? "👑 Lihat PharmaPulse Champion!"
+        : `✨ Lanjut ke Ronde ${rondeSekarang + 1}`;
+
+      btnLanjut.onclick = () => {
+        document.getElementById("feedbackModal").style.display = "none";
+        if (cekKondisiSelesai()) return;
+
+        rondeSekarang++;
+        perbaruiHUD();
+        mulaiRondeBaru();
+      };
     }
 
-    // Tampilkan papan peringkat saat halaman pertama kali dibuka
+    // 8. Cek Kondisi Permainan Berakhir & Rekap Akhir
+    function cekKondisiSelesai() {
+      if (rondeSekarang >= maxRonde || player1.skor >= targetSkorMenang || player2.skor >= targetSkorMenang) {
+        isGameOver = true;
+        document.getElementById("areaGame").style.display = "none";
+
+        let pemenangText = "";
+        if (player1.skor > player2.skor) {
+          pemenangText = `🏅 PharmaPulse Champion: <strong>${player1.nama} 🍓</strong>`;
+          simpanSkorPemenang(`${player1.nama} 🍓`, player1.skor);
+        } else if (player2.skor > player1.skor) {
+          pemenangText = `🏅 PharmaPulse Champion: <strong>${player2.nama} 🫐</strong>`;
+          simpanSkorPemenang(`${player2.nama} 🫐`, player2.skor);
+        } else {
+          pemenangText = `🤝 Hasil Seri! Kalian Sama-Sama Hebat!`;
+          simpanSkorPemenang(`${player1.nama} & ${player2.nama}`, player1.skor);
+        }
+
+        document.getElementById("rekapSkorSummary").innerHTML = `
+          ${pemenangText}<br><br>
+          🍓 <strong>${player1.nama}:</strong> ${player1.skor} poin<br>
+          🫐 <strong>${player2.nama}:</strong> ${player2.skor} poin<br>
+          <span style="font-size:11.5px; color:#64748b;">Total Ronde Selesai: ${rondeSekarang} dari ${maxRonde}</span>
+        `;
+
+        const listEl = document.getElementById("listMateriUlang");
+        if (materiPerluDiulang.length === 0) {
+          listEl.innerHTML = `<li style="color:#059669; font-weight:700;">Keren banget! Semua kasus farmakologi terjawab dengan benar! 🌟</li>`;
+        } else {
+          listEl.innerHTML = materiPerluDiulang.map(m => `<li>${m}</li>`).join("");
+        }
+
+        document.getElementById("rekapModal").style.display = "block";
+        statusText.innerText = "👑 Sesi Duel Selesai!";
+        return true;
+      }
+      return false;
+    }
+
     muatPeringkat();
   </script>
 </body>
